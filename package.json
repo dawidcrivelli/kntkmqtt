@@ -1,0 +1,30 @@
+{
+  "name": "kntkmqtt",
+  "version": "0.0.1",
+  "description": "Debug client for Kontakt.io MQTT streams",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrianz/something.git"
+  },
+  "keywords": [
+    "mqtt",
+    "kontakt.io",
+    "debug"
+  ],
+  "author": "Adrian Ziobro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adrianz/something/issues"
+  },
+  "homepage": "https://github.com/adrianz/something#readme",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "configstore": "^4.0.0",
+    "inquirer": "^6.2.1",
+    "mqtt": "^2.18.8"
+  }
+}
