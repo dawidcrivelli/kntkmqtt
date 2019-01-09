@@ -82,7 +82,10 @@ typings/
 .dynamodb/
 
 # Generic .gitignore file for basic projects
-#
+
+# IDE files
+.vscode/
+
 # Removes only OS-generated files
 
 # macOS
