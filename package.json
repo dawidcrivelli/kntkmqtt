@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adrianz/something.git"
+    "url": "git+https://github.com/adrianz/kntkmqtt.git"
   },
   "keywords": [
     "mqtt",
@@ -18,9 +18,9 @@
   "author": "Adrian Ziobro",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/adrianz/something/issues"
+    "url": "https://github.com/adrianz/kntkmqtt/issues"
   },
-  "homepage": "https://github.com/adrianz/something#readme",
+  "homepage": "https://github.com/adrianz/kntkmqtt#readme",
   "dependencies": {
     "commander": "^2.19.0",
     "configstore": "^4.0.0",
