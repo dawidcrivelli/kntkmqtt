@@ -7,6 +7,8 @@ const inquirer      = require('./inquirer');
 
 const conf = new Configstore(pkg.name);
 
+let manualMode = true;
+
 program
     .version(pkg.version)
     .option('-a, --apikey <apikey>', 'API key')
@@ -20,10 +22,15 @@ program
     .command('run <alias>')
     .description('start a stream from a predefined config')
     .action(function (alias) {
-        console.log('Running a predefined config: ' + alias);
+        console.log('Looking for a predefined config: ' + alias);
         const savedConfig = conf.get(alias);
-        mqttClient.startStream(savedConfig);
-        //process.exit(0);
+        if (savedConfig === undefined) {
+            console.warn('Predefined config ' + alias + ' not found.\nSwitching to the manual mode…');
+        } else {
+            console.log('Config found, starting a stream:');
+            manualMode = false;
+            mqttClient.startStream(savedConfig);
+        }
     });
 
 program
@@ -31,7 +38,7 @@ program
     .description('list all saved configs')
     .action(function () {
         console.log('Listing all predefined configs:');
-        console.log(conf.all)
+        console.log(conf.all);
         process.exit(0);
     });
 
@@ -42,45 +49,41 @@ program.on('command:*', function () {
 
 program.parse(process.argv);
 
-const save = !program.dontSave
-
 if (program.clear) {
     conf.clear();
     console.log('All saved configs have been removed.');
     process.exit(0);
 }
 
-const streamParameters = {
-    apikey: program.apikey,
-    env: program.env,
-    source: program.source,
-    type: program.type
-}
+if (manualMode) {
+    const save = !program.dontSave;
 
-console.log('Stream parameters:');
-for (const key in streamParameters) {
-    if (streamParameters.hasOwnProperty(key)) {
-        const element = streamParameters[key];
-        console.log(key + ': ' + element);
+    const streamParameters = {
+        apikey: program.apikey,
+        env: program.env,
+        source: program.source,
+        type: program.type
     }
-}
 
-const missingData = {}
+    let answers;
 
-if (save) {
-    missingData = inquirer.askForMissingDetails(streamParameters);
-} else {
-    missingData = inquirer.askForMissingDetails(streamParameters, program.dontSave);
-}
-
-for (const key in missingData) {
-    if (missingData.hasOwnProperty(key) && key !== 'alias') {
-        streamParameters[key] = missingData[key];
+    if (save) {
+        answers = inquirer.askForMissingDetails(streamParameters);
+    } else {
+        answers = inquirer.askForMissingDetails(streamParameters, program.dontSave);
     }
-}
 
-if (save) {
-    conf.set(missingData['alias'], streamParameters)
+    answers.then(missingData => {
+        for (const key in missingData) {
+            if (missingData.hasOwnProperty(key) && key !== 'alias') {
+                streamParameters[key] = missingData[key];
+            }
+        }
+        
+        if (save) {
+            conf.set(missingData['alias'], streamParameters)
+        }
+        
+        mqttClient.startStream(streamParameters);
+    });
 }
-
-mqttClient.startStream(streamParameters);

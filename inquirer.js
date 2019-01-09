@@ -41,7 +41,7 @@ const questionsMaster = {
     },
     type: {
         name: 'type',
-        message: '',
+        message: 'Stream type',
         type: 'list',
         choices: [
             {
@@ -58,7 +58,14 @@ const questionsMaster = {
     },
     alias: {
         name: 'alias',
-        message: 'Name for a preset (alphanumeric characters only, please)'
+        message: 'Name for a preset (alphanumeric characters only, please)',
+        validate: function (value) {
+            if (value.length > 0) {
+                return true;
+            } else {
+                return 'Please enter a valid name for your config'
+            }
+        }
     }
 }
 
@@ -66,7 +73,7 @@ function askForMissingDetails(params, save = true) {
     const questions = [];
 
     for (const key in params) {
-        if (params.hasOwnProperty(key) && params[key] === 'undefined') {
+        if (params.hasOwnProperty(key) && params[key] === undefined) {
             questions.push(questionsMaster[key]);
         }
     }

@@ -1,13 +1,15 @@
-const mqtt = require('mqtt');
+const mqtt          = require('mqtt');
+const assetBuilder  = require('./assetbuilder');
+const os            = require('os');
 
 function startStream(streamConfig) {
     const connectionOptions = {
-        username: 'azaz', // TODO: Find a way to generate something more useful
+        username: os.hostname() + '-' + os.platform() + '-' + os.arch(),
         password: streamConfig.apikey
     }
     
-    const broker = 'mqtt://testmqtt.kontakt.io:1883';
-    const streamTopic = '/presence/stream/zYwiz';
+    const broker = assetBuilder.makeURL(streamConfig.env);
+    const streamTopic = assetBuilder.makeTopic(streamConfig.type, streamConfig.source);
 
     const client = mqtt.connect(broker, connectionOptions);
 
