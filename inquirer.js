@@ -94,7 +94,7 @@ const questionsMaster = {
     }
 }
 
-function askForMissingDetails(params, save = true) {
+function askForMissingDetails(params, save) {
     const questions = [];
 
     for (const key in params) {

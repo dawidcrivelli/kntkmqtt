@@ -65,13 +65,7 @@ if (manualMode) {
         type: program.type
     }
 
-    let answers;
-
-    if (save) {
-        answers = inquirer.askForMissingDetails(streamParameters);
-    } else {
-        answers = inquirer.askForMissingDetails(streamParameters, program.dontSave);
-    }
+    let answers = inquirer.askForMissingDetails(streamParameters, save);
 
     answers.then(missingData => {
         for (const key in missingData) {
