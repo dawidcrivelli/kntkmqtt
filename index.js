@@ -4,6 +4,7 @@ const Configstore   = require('configstore');
 const pkg           = require('./package.json');
 const program       = require('commander');
 const inquirer      = require('./inquirer');
+const chalk         = require('chalk');
 
 const conf = new Configstore(pkg.name);
 
@@ -12,9 +13,9 @@ let manualMode = true;
 program
     .version(pkg.version)
     .option('-a, --apikey <apikey>', 'API key')
-    .option('-e, --env <env>', 'environment: test, accept or production', /^(test|accept|production)$/i)
+    .option('-e, --env <env>', 'environment: ' + chalk.blue('test') + ', ' + chalk.blue('accept') + ' or ' + chalk.blue('production'), /^(test|accept|production)$/i)
     .option('-s, --source <source>', 'source of data for a stream: Unique ID, UUID, MAC address, etc.')
-    .option('-t, --type <type>', 'type of a stream: presence, health, accelerometer, sensor, button, telemetry or all', /^(presence|health|accelerometer|sensor|button|telemetry|all)$/i)
+    .option('-t, --type <type>', 'type of a stream: ' + chalk.blue('presence') + ', ' + chalk.blue('health') + ', ' + chalk.blue('accelerometer') + ', ' + chalk.blue('sensor') + ', ' + chalk.blue('button') + ', ' + chalk.blue('telemetry') + ' or ' + chalk.blue('all'), /^(presence|health|accelerometer|sensor|button|telemetry|all)$/i)
     .option('-d, --dont-save', 'do not ask for saving a config')
     .option('-c, --clear', 'remove all saved configs');
 
@@ -22,12 +23,12 @@ program
     .command('run <alias>')
     .description('start a stream from a predefined config')
     .action(function (alias) {
-        console.log('Looking for a predefined config: ' + alias);
+        console.log('Looking for a predefined config: ' + chalk.bold.magenta(alias));
         const savedConfig = conf.get(alias);
         if (savedConfig === undefined) {
-            console.warn('Predefined config ' + alias + ' not found.\nSwitching to the manual mode…');
+            console.warn('✘ Predefined config ' + chalk.bold.magenta(alias) + ' not found.\n' + chalk.keyword('orange')('Switching to the manual mode…'));
         } else {
-            console.log('Config found, starting a stream:');
+            console.log(chalk.green('✔︎ Config found, starting a stream:'));
             manualMode = false;
             mqttClient.startStream(savedConfig);
         }
@@ -43,7 +44,7 @@ program
     });
 
 program.on('command:*', function () {
-    console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
+    console.error(chalk.red('Invalid command: ' + program.args.join(' ')) + '\nSee ' + chalk.yellow.bold('--help') + ' for a list of available commands.');
     process.exit(1);
 });
 

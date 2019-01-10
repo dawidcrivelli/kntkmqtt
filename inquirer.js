@@ -3,7 +3,7 @@ const inquirer = require('inquirer');
 const questionsMaster = {
     apikey: {
         name: 'apikey',
-        message: 'API Key',
+        message: 'API Key:',
         validate: function (value) {
             if (value.length > 2) {
                 return true;
@@ -14,7 +14,7 @@ const questionsMaster = {
     },
     env: {
         name: 'env',
-        message: 'Environment',
+        message: 'Environment:',
         type: 'list',
         choices: [
             {
@@ -37,11 +37,11 @@ const questionsMaster = {
     },
     source: {
         name: 'source',
-        message: 'Data source'
+        message: 'Data source:'
     },
     type: {
         name: 'type',
-        message: 'Stream type',
+        message: 'Stream type:',
         type: 'list',
         choices: [
             {
@@ -83,7 +83,7 @@ const questionsMaster = {
     },
     alias: {
         name: 'alias',
-        message: 'Name for a preset (alphanumeric characters only, please)',
+        message: 'Name for a preset (alphanumeric characters only, please):',
         validate: function (value) {
             if (value.length > 0) {
                 return true;

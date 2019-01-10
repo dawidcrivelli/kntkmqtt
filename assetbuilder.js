@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 function makeTopic(type, source) {
     switch (type) {
         case 'presence':
@@ -16,7 +18,7 @@ function makeTopic(type, source) {
         case 'telemetry':
             return type + '/' + source
         default:
-            console.error('Unknown stream type');
+            console.error(chalk.red('Unknown stream type'));
             process.exit(1);
     }
 }
@@ -30,7 +32,7 @@ function makeURL(env) {
         case 'test':
             return 'mqtts://testmqtt.kontakt.io:8083';
         default:
-            console.error('Unknown environment');
+            console.error(chalk.red('☢︎ Unknown environment ☢︎'));
             process.exit(1);
     }
 }
