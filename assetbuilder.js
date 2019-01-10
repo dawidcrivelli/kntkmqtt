@@ -11,7 +11,10 @@ function makeTopic(type, source) {
         case 'accelerometer':
         case 'sensor':
         case 'button':
+        case 'all':
             return '/stream/' + source + '/' + type;
+        case 'telemetry':
+            return type + '/' + source
         default:
             console.error('Unknown stream type');
             process.exit(1);

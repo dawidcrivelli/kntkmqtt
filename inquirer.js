@@ -20,17 +20,17 @@ const questionsMaster = {
             {
                 name: 'Test',
                 value: 'test',
-                short: 'Short Test'
+                short: 'Test'
             },
             {
                 name: 'Accept',
                 value: 'accept',
-                short: 'Short Accept'
+                short: 'Accept'
             },
             {
                 name: 'Production',
                 value: 'production',
-                short: 'Short Prod'
+                short: 'Production'
             }
         ],
         default: 0
@@ -53,6 +53,31 @@ const questionsMaster = {
                 name: 'Sensors data from a single Beacon (except an accelerometer)',
                 value: 'sensor',
                 short: 'Sensor'
+            },
+            {
+                name: 'Accelerometer data from a single Beacon',
+                value: 'accelerometer',
+                short: 'Accelerometer'
+            },
+            {
+                name: 'Button press events from a button-equipped Beacon',
+                value: 'button',
+                short: 'Button'
+            },
+            {
+                name: 'Health data from a single Beacon',
+                value: 'health',
+                short: 'Beacon Health'
+            },
+            {
+                name: 'Complete Telemetry data from a single Beacon',
+                value: 'all',
+                short: 'Complete Telemetry'
+            },
+            {
+                name: 'Complete Telemetry data from a all Beacons belonging to a given Company',
+                value: 'all',
+                short: 'Company Telemetry'
             }
         ]
     },
