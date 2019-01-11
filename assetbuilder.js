@@ -7,7 +7,7 @@ function makeTopic(type, source) {
             if (source.length < 25) {
                 return '/presence/stream/' + source;
             } else {
-                return '/stream/' + source + 'presence'
+                return '/stream/' + source + '/presence'
             }
         case 'health':
         case 'accelerometer':
