@@ -43,6 +43,20 @@ program
         process.exit(0);
     });
 
+program
+    .command('delete <alias>')
+    .description('remove a predefined config')
+    .action(function (alias) {
+        if (conf.has(alias)) {
+            conf.delete(alias);
+            console.log(chalk.green('✔︎ Config deleted'));
+            process.exit(0);
+        } else {
+            console.warn('✘ Predefined config ' + chalk.bold.magenta(alias) + ' not found.');
+            process.exit(1);
+        }
+    });
+
 program.on('command:*', function () {
     console.error(chalk.red('Invalid command: ' + program.args.join(' ')) + '\nSee ' + chalk.yellow.bold('--help') + ' for a list of available commands.');
     process.exit(1);
