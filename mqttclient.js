@@ -1,13 +1,14 @@
 const mqtt          = require('mqtt');
 const assetBuilder  = require('./assetbuilder');
 const os            = require('os');
+const chalk         = require('chalk');
 
 function startStream(streamConfig) {
     const connectionOptions = {
         username: os.hostname() + '-' + os.platform() + '-' + os.arch(),
         password: streamConfig.apikey
     }
-    
+
     const broker = assetBuilder.makeURL(streamConfig.env);
     const streamTopic = assetBuilder.makeTopic(streamConfig.type, streamConfig.source);
 
@@ -18,17 +19,19 @@ function startStream(streamConfig) {
         client.subscribe(streamTopic, function (error, granted) {
             if (!error) {
                 console.log(granted);
+                if (granted[0].qos > 100)
+                    client.emit('error', chalk.red(`✘ Invalid MQTT topic`))
             } else {
                 console.error(error);
             }
         });
     });
-    
+
     client.on('error', function(error) {
         console.error(error);
         process.exit(1);
     });
-    
+
     client.on('message', function(topic, message, packet) {
         const jsonString = message.toString();
         const json = JSON.parse(jsonString);
