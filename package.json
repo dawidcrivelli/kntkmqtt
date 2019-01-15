@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Debug client for Kontakt.io MQTT streams",
   "main": "index.js",
+  "bin": {
+    "kntkmqtt": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
