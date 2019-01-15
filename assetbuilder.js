@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const axios = require('axios');
 
 function makeTopic(type, source) {
     switch (type) {
@@ -37,7 +38,44 @@ function makeURL(env) {
     }
 }
 
+function makeApiURL(env) {
+    switch (env) {
+        case 'production':
+            return 'https://api.kontakt.io';
+        case 'accept':
+            return 'https://acceptapi.kontakt.io';
+        case 'test':
+            return 'https://testapi.kontakt.io';
+        default:
+            console.error(chalk.red('☢︎ Unknown environment ☢︎'));
+            process.exit(1);
+    }
+}
+
+function getCompanyKey(env, apiKey) {
+    let url = makeApiURL(env);
+    let headers = {
+        'Accept': 'application/vnd.com.kontakt+json; version=10',
+        'Api-Key': apiKey
+    };
+    return axios.get(`${url}/manager/me`, { headers }).then(response => {
+        let companyId = response.data.companyId;
+        console.log(`${chalk.green('✔︎')} Fetched companyId ${companyId}`);
+        return companyId
+    }).catch(() => {
+        return ""
+    })
+}
+
+function getMissingCompanyId(missingData) {
+    if (missingData.type === 'telemetry' && (!missingData.source || missingData.source === '')) {
+        return getCompanyKey(missingData.env, missingData.apikey);
+    } else
+        return Promise.resolve(missingData.source);
+}
+
 module.exports = {
+    getMissingCompanyId,
     makeTopic: makeTopic,
     makeURL: makeURL
 }

@@ -5,7 +5,7 @@ const pkg           = require('./package.json');
 const program       = require('commander');
 const inquirer      = require('./inquirer');
 const chalk         = require('chalk');
-
+const assetBuilder  = require('./assetbuilder')
 const conf = new Configstore(pkg.name);
 
 let manualMode = true;
@@ -83,16 +83,21 @@ if (manualMode) {
     let answers = inquirer.askForMissingDetails(streamParameters, save);
 
     answers.then(missingData => {
+        return assetBuilder.getMissingCompanyId(missingData).then(source => {
+            missingData.source = source;
+            return missingData;
+        })
+    }).then(missingData => {
         for (const key in missingData) {
             if (missingData.hasOwnProperty(key) && key !== 'alias') {
                 streamParameters[key] = missingData[key];
             }
         }
-        
+
         if (save) {
             conf.set(missingData['alias'], streamParameters)
         }
-        
+
         mqttClient.startStream(streamParameters);
     });
 }
