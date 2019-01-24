@@ -24,7 +24,7 @@ function makeTopic(type, source) {
     }
 }
 
-function makeURL(env) {
+function makeStreamURL(env) {
     switch (env) {
         case 'production':
             return 'mqtts://mqtt.kontakt.io:8083';
@@ -77,5 +77,5 @@ function getMissingCompanyId(missingData) {
 module.exports = {
     getMissingCompanyId,
     makeTopic: makeTopic,
-    makeURL: makeURL
+    makeStreamURL: makeStreamURL
 }

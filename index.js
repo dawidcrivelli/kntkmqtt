@@ -5,8 +5,8 @@ const pkg           = require('./package.json');
 const program       = require('commander');
 const inquirer      = require('./inquirer');
 const chalk         = require('chalk');
-const assetBuilder  = require('./assetbuilder')
-const conf = new Configstore(pkg.name);
+const assetBuilder  = require('./assetbuilder');
+const conf          = new Configstore(pkg.name);
 
 let manualMode = true;
 
@@ -64,6 +64,8 @@ program.on('command:*', function () {
 
 program.parse(process.argv);
 
+console.log(`Node version: ${process.version}`);
+
 if (program.clear) {
     conf.clear();
     console.log('All saved configs have been removed.');
@@ -76,8 +78,8 @@ if (manualMode) {
     const streamParameters = {
         apikey: program.apikey,
         env: program.env,
-        source: program.source,
-        type: program.type
+        type: program.type,
+        source: program.source
     }
 
     let answers = inquirer.askForMissingDetails(streamParameters, save);
@@ -86,7 +88,7 @@ if (manualMode) {
         return assetBuilder.getMissingCompanyId(missingData).then(source => {
             missingData.source = source;
             return missingData;
-        })
+        });
     }).then(missingData => {
         for (const key in missingData) {
             if (missingData.hasOwnProperty(key) && key !== 'alias') {
