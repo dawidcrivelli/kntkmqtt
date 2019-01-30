@@ -2,34 +2,36 @@ const semver = require('semver');
 const chalk  = require('chalk');
 
 function showStaticStreamData(data, previousData) {
-    console.log('Key'.padEnd(20) + 'Value'.padEnd(20) + 'Old value\n');
-    for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-            const paddedKey = key.padEnd(20);
-            let paddedCurrentValue = '';
+    if (Object.keys(data).length > 0) {
+        console.log('Key'.padEnd(20) + 'Value'.padEnd(20) + 'Old value\n');
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const paddedKey = key.padEnd(20);
+                let paddedCurrentValue = '';
 
-            if (data[key] !== null) {
-                paddedCurrentValue = data[key].toString().padEnd(20);
-            } else {
-                paddedCurrentValue = 'null'.padEnd(20);
-            }
-            
-            if (data[key] === previousData[key] || previousData[key] === undefined) {
-                console.log(paddedKey + paddedCurrentValue);
-            } else {
-                let paddedOldValue = '';
-                
-                if (paddedOldValue !== null) {
-                    paddedOldValue = previousData[key].toString().padEnd(20);
+                if (data[key] !== null) {
+                    paddedCurrentValue = data[key].toString().padEnd(20);
                 } else {
-                    paddedOldValue = 'null'.padEnd(20);
+                    paddedCurrentValue = 'null'.padEnd(20);
                 }
                 
-                console.log(chalk.bold(paddedKey + chalk.green(paddedCurrentValue) + paddedOldValue));
+                if (data[key] === previousData[key] || previousData[key] === undefined) {
+                    console.log(paddedKey + paddedCurrentValue);
+                } else {
+                    let paddedOldValue = '';
+
+                    if (paddedOldValue !== null) {
+                        paddedOldValue = previousData[key].toString().padEnd(20);
+                    } else {
+                        paddedOldValue = 'null'.padEnd(20);
+                    }
+                    
+                    console.log(chalk.bold(paddedKey + chalk.green(paddedCurrentValue) + paddedOldValue));
+                }
             }
-        } else {
-            console.log(chalk.yellow('\nMessage with no data'));
         }
+    } else {
+        console.log(chalk.yellow('\nMessage with no data'));
     }
 }
 
