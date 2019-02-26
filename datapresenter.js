@@ -73,13 +73,15 @@ let debouncer = {
 }
 setInterval(() => debouncer.printOut(), 1000)
 
+const macs = new Set(['da:fb:81:c4:63:63', 'f3:c9:1b:0f:2f:3a', 'ce:1c:87:3a:da:f0', 'd3:c5:b0:e8:94:2c', 'f4:b8:5e:ac:5a:87', 'f4:b8:5e:ac:4e:68', 'e3:44:47:a3:9d:71', 'eb:5f:62:1c:90:07', '60:c0:bf:0d:6b:1b', 'e2:02:00:1e:e3:40', 'e2:02:00:2d:f4:40', 'e3:44:47:a3:9d:71', 'e8:7a:4c:fc:04:72', 'ea:96:9d:79:41:64'])
+
 function handle(message, streamType) {
     const jsonString = message.toString();
     const json = JSON.parse(jsonString);
 
     switch (streamType) {
         case 'presence':
-            let filtered = json.slice()
+            let filtered = json.filter(m => macs.has(m.deviceAddress))
             filtered.sort((a, b) => stringCmp(a.deviceAddress, b.deviceAddress))
             clearScreen()
             console.table(filtered)
