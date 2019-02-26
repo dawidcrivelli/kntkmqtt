@@ -64,8 +64,6 @@ program.on('command:*', function () {
 
 program.parse(process.argv);
 
-console.log(`Node version: ${process.version}`);
-
 if (program.clear) {
     conf.clear();
     console.log('All saved configs have been removed.');

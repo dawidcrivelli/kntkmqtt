@@ -40,19 +40,11 @@ function startStream(streamConfig) {
         process.exit(1);
     });
 
-    let previousMessage = {};
     let messageCounter = 0;
 
     client.on('message', function(topic, message, packet) {
-        process.stdout.write('\x1b[0f');
-        process.stdout.write('\x1b[2J');
-        
         messageCounter++
-        console.log('=================================================');
-        console.log('Message #' + chalk.bold.yellow(messageCounter) + ' from ' + topic);
-        console.log('Received on ' + Date());
-        console.log('=================================================\n');
-        previousMessage = presenter.handle(message, streamConfig.type, previousMessage);
+        presenter.handle(message, streamConfig.type);
     });
 }
 

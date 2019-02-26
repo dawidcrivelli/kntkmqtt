@@ -1,5 +1,20 @@
-const semver = require('semver');
 const chalk  = require('chalk');
+require('console.table')
+
+function clearScreen() {
+    process.stdout.write('\x1b[0f');
+    process.stdout.write('\x1b[2J');
+}
+
+function stringCmp(a, b) {
+    if (a > b) {
+        return 1;
+    }
+    if (a < b) {
+        return -1;
+    }
+    return 0;
+}
 
 function showStaticStreamData(data, previousData) {
     if (Object.keys(data).length > 0) {
@@ -14,7 +29,7 @@ function showStaticStreamData(data, previousData) {
                 } else {
                     paddedCurrentValue = 'null'.padEnd(20);
                 }
-                
+
                 if (data[key] === previousData[key] || previousData[key] === undefined) {
                     console.log(paddedKey + paddedCurrentValue);
                 } else {
@@ -25,7 +40,7 @@ function showStaticStreamData(data, previousData) {
                     } else {
                         paddedOldValue = 'null'.padEnd(20);
                     }
-                    
+
                     console.log(chalk.bold(paddedKey + chalk.green(paddedCurrentValue) + paddedOldValue));
                 }
             }
@@ -35,30 +50,48 @@ function showStaticStreamData(data, previousData) {
     }
 }
 
-function showDynamicStreamData(data, previousData) {
-    
-}
+let debouncer = {
+    cache: {},
 
-function handle(message, streamType, previousMessage) {
+    add: (msg) => {
+        let obj = debouncer.cache[msg.sourceId] || {}
+        let augmented = Object.assign(obj, msg)
+        debouncer.cache[msg.sourceId] = augmented
+    },
+
+    printOut: () => {
+        if (Object.keys(debouncer.cache).length > 0) {
+            clearScreen()
+            console.log('Messages at ', Date.now() / 1000)
+            console.log('')
+            let table = Object.values(debouncer.cache)
+            table.sort((a,b) => stringCmp(a.sourceId, b.sourceId))
+            console.table(table)
+            debouncer.cache = {}
+        }
+    }
+}
+setInterval(() => debouncer.printOut(), 1000)
+
+function handle(message, streamType) {
     const jsonString = message.toString();
     const json = JSON.parse(jsonString);
 
     switch (streamType) {
         case 'presence':
-            if (semver.gte(process.version, '10.0.0')) {
-                console.table(json)
-            } else {
-                console.log(json);
-            }
+            let filtered = json.slice()
+            filtered.sort((a, b) => stringCmp(a.deviceAddress, b.deviceAddress))
+            clearScreen()
+            console.table(filtered)
             break;
         case 'health':
         case 'accelerometer':
         case 'sensor':
         case 'button':
-            showStaticStreamData(json, previousMessage);
+            showStaticStreamData(json);
             break;
         default:
-            console.log(json);
+            debouncer.add(json)
             break;
     }
 
