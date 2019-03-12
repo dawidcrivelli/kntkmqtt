@@ -83,8 +83,12 @@ function handle(message, streamType, macs) {
             let filtered = (macs.size > 0) ? json.filter(m => macs.has(m.deviceAddress)) : json
             filtered.sort((a, b) => stringCmp(a.deviceAddress, b.deviceAddress))
 
-            clearScreen()
-            console.table(filtered)
+            if (filtered.length > 0) {
+                clearScreen()
+                console.log('Messages at ', Date.now() / 1000)
+                console.log('')
+                console.table(filtered)
+            }
             break;
         case 'health':
         case 'accelerometer':
