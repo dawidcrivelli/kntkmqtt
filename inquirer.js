@@ -50,6 +50,11 @@ const questionsMaster = {
                 short: 'Presence'
             },
             {
+                name: 'Location data from location frames of a beacon',
+                value: 'location',
+                short: 'Location'
+            },
+            {
                 name: 'Sensors data from a single Beacon (except an accelerometer)',
                 value: 'sensor',
                 short: 'Sensor'

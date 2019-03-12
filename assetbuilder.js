@@ -10,6 +10,8 @@ function makeTopic(type, source) {
             } else {
                 return '/stream/' + source + '/presence'
             }
+        case 'location':
+            return '/stream/' + source + '/location'
         case 'health':
         case 'accelerometer':
         case 'sensor':
