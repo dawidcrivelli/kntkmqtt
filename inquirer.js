@@ -81,6 +81,10 @@ const questionsMaster = {
             }
         ]
     },
+    macs: {
+        name: 'macs',
+        message: 'Comma separated list of MAC address to filter:'
+    },
     alias: {
         name: 'alias',
         message: 'Name for a preset (alphanumeric characters only, please):',

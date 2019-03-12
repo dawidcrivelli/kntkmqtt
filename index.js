@@ -17,7 +17,8 @@ program
     .option('-s, --source <source>', 'source of data for a stream: Unique ID, UUID, MAC address, etc.')
     .option('-t, --type <type>', 'type of a stream: ' + chalk.blue('presence') + ', ' + chalk.blue('health') + ', ' + chalk.blue('accelerometer') + ', ' + chalk.blue('sensor') + ', ' + chalk.blue('button') + ', ' + chalk.blue('telemetry') + ' or ' + chalk.blue('all'), /^(presence|health|accelerometer|sensor|button|telemetry|all)$/i)
     .option('-d, --dont-save', 'do not ask for saving a config')
-    .option('-c, --clear', 'remove all saved configs');
+    .option('-c, --clear', 'remove all saved configs')
+    .option('--macs <maclist>', 'list of comma separated MAC addresses');
 
 program
     .command('run <alias>')
@@ -77,7 +78,8 @@ if (manualMode) {
         apikey: program.apikey,
         env: program.env,
         type: program.type,
-        source: program.source
+        source: program.source,
+        macs: program.macs
     }
 
     let answers = inquirer.askForMissingDetails(streamParameters, save);
