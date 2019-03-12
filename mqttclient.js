@@ -45,9 +45,9 @@ function startStream(streamConfig) {
     let messageCounter = 0;
     const macs = new Set(streamConfig.macs.split(',').filter(item => item !== ''))
 
-    client.on('message', function(topic, message, packet) {
+    client.on('message', function(topic, message) {
         messageCounter++
-        presenter.handle(message, streamConfig.type, macs);
+        presenter.handle(message, streamConfig.type, topic, macs);
     });
 }
 

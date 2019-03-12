@@ -1,20 +1,6 @@
-const chalk  = require('chalk');
+const chalk = require('chalk');
+const { debouncer, grouper, diffReturn, stringCmp, clearScreen } = require('./grouping')
 require('console.table')
-
-function clearScreen() {
-    process.stdout.write('\x1b[0f');
-    process.stdout.write('\x1b[2J');
-}
-
-function stringCmp(a, b) {
-    if (a > b) {
-        return 1;
-    }
-    if (a < b) {
-        return -1;
-    }
-    return 0;
-}
 
 function showStaticStreamData(data, previousData) {
     if (Object.keys(data).length > 0) {
@@ -50,31 +36,7 @@ function showStaticStreamData(data, previousData) {
     }
 }
 
-let debouncer = {
-    cache: {},
-
-    add: (msg) => {
-        let obj = debouncer.cache[msg.sourceId] || {}
-        let augmented = Object.assign(obj, msg)
-        debouncer.cache[msg.sourceId] = augmented
-    },
-
-    printOut: () => {
-        if (Object.keys(debouncer.cache).length > 0) {
-            clearScreen()
-            console.log('Messages at ', Date.now() / 1000)
-            console.log('')
-            let table = Object.values(debouncer.cache)
-            table.sort((a,b) => stringCmp(a.sourceId, b.sourceId))
-            console.table(table)
-            debouncer.cache = {}
-        }
-    }
-}
-setInterval(() => debouncer.printOut(), 1000)
-
-
-function handle(message, streamType, macs) {
+function handle(message, streamType, topic, macs) {
     const jsonString = message.toString();
     const json = JSON.parse(jsonString);
 
@@ -88,6 +50,14 @@ function handle(message, streamType, macs) {
                 console.log('Messages at ', Date.now() / 1000)
                 console.log('')
                 console.table(filtered)
+            }
+            break;
+        case 'location':
+            if (Object.keys(json).length > 0) {
+                let trackingId = RegExp('/stream/(.*)/location').exec(topic)[1]
+                json['timestamp'] = Date.now()
+                json['trackingId'] = trackingId
+                grouper.add(json)
             }
             break;
         case 'health':
