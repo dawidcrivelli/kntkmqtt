@@ -48,6 +48,7 @@ class ApiClient {
         for(let reading of readings) {
             let sourceId = reading['sourceId']
             let trackingId = reading['trackingId']
+            let mac = reading['deviceAddress']
             let rssi = reading['rssi']
             let timestamp = reading['timestamp']
             if (!trackingId.includes(':')) {

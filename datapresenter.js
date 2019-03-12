@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const { debouncer, grouper, diffReturn, stringCmp, clearScreen } = require('./grouping')
+const { influx } = require('./influx-client')
 require('console.table')
 
 function showStaticStreamData(data, previousData) {
@@ -36,6 +37,8 @@ function showStaticStreamData(data, previousData) {
     }
 }
 
+grouper.setCallback((msg) => influx.writeMeasurementsNow(msg))
+
 function handle(message, streamType, topic, macs) {
     const jsonString = message.toString();
     const json = JSON.parse(jsonString);
@@ -43,6 +46,7 @@ function handle(message, streamType, topic, macs) {
     switch (streamType) {
         case 'presence':
             let filtered = (macs.size > 0) ? json.filter(m => macs.has(m.deviceAddress)) : json
+            filtered = filtered.filter(m => diffReturn.testDifferent(m))
             filtered.sort((a, b) => stringCmp(a.deviceAddress, b.deviceAddress))
 
             if (filtered.length > 0) {
@@ -50,6 +54,7 @@ function handle(message, streamType, topic, macs) {
                 console.log('Messages at ', Date.now() / 1000)
                 console.log('')
                 console.table(filtered)
+                influx.writeMeasurementsNow(filtered)
             }
             break;
         case 'location':
