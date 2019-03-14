@@ -39,15 +39,23 @@ setInterval(() => debouncer.printOut(), 1000)
 
 const grouper = {
     cache: [],
+    callback: (msg) => { },
 
-    add: (msg) => {
-        grouper.cache.push(msg)
+    setCallback: function (callback) {
+        this.callback = callback
     },
 
-    printOut: () => {
-        if (grouper.cache.length > 0) {
-            console.table(grouper.cache)
-            grouper.cache = []
+    add: function (msg) {
+        this.cache.push(msg)
+    },
+
+    printOut: function () {
+        if (this.cache.length > 0) {
+            console.table(this.cache)
+            if (this.callback) {
+                this.callback(this.cache)
+            }
+            this.cache = []
         }
     }
 }

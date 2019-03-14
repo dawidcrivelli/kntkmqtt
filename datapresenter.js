@@ -54,9 +54,7 @@ function handle(message, streamType, topic, macs) {
             break;
         case 'location':
             if (Object.keys(json).length > 0) {
-                let trackingId = RegExp('/stream/(.*)/location').exec(topic)[1]
-                json['timestamp'] = Date.now()
-                json['trackingId'] = trackingId
+                json.timestamp /= 1000.0
                 grouper.add(json)
             }
             break;
